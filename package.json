@@ -1,0 +1,9 @@
+{
+  "name": "apollo-graphql-federation-memory-leak",
+  "version": "1.0.0",
+  "author": "Juan Carlos Blanco Delgado <juancarlosjr97@gmail.com>",
+  "license": "UNLICENSED",
+  "workspaces": [
+    "packages/**"
+  ]
+}

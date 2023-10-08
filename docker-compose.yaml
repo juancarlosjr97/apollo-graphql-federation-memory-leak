@@ -1,0 +1,49 @@
+version: "3.9"
+services:
+  cadvisor:
+    container_name: cadvisor
+    image: gcr.io/cadvisor/cadvisor:v0.47.2
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    ports:
+      - 8080:8080
+    privileged: true
+    devices:
+      - /dev/kmsg
+    networks:
+      - apollo
+
+  subgraph:
+    container_name: subgraph
+    build: ./packages/subgraph
+    ports:
+      - 4001:4001
+    depends_on:
+      - cadvisor
+    networks:
+      - apollo
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  gateway:
+    container_name: gateway
+    build: ./packages/gateway
+    ports:
+      - 4000:4000
+    depends_on:
+      - subgraph
+    networks:
+      - apollo
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+networks:
+  apollo:
